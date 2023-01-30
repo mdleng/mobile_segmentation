@@ -97,7 +97,7 @@ class Trainer:
 
         self.optimizer.load_state_dict(save_info['optimizer'])
         self.net.load_state_dict(save_info['state_dict'])
-        self.lr_scheduler.load_state_dict(save_info['lr_scheduler'])
+        #self.lr_scheduler.load_state_dict(save_info['lr_scheduler'])
         self.loss = save_info['loss']
 
         print(f"[*] Load Model from {ckpt}")
