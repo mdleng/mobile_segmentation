@@ -74,13 +74,13 @@ class Trainer:
 
     def load_model(self):
         if not self.model_path and not self.resume:
-            self.run = wandb.init(project='hair_segmentation', dir=os.getcwd())
+            self.run = wandb.init(project='hair_segmentation', dir=os.getcwd(),mode="offline",force="False")
             return
 
         ckpt = f'{self.checkpoint_dir}/last.pth' if self.resume else self.model_path
         save_info: dict = torch.load(ckpt, map_location=self.device)
         run_id = save_info['run_id'] if 'run_id' in save_info else None
-        self.run = wandb.init(id=run_id, project='hair_segmentation', resume="allow", dir=os.getcwd())
+        self.run = wandb.init(id=run_id, project='hair_segmentation', resume="allow", dir=os.getcwd(),mode="offline",force="False")
 
         # try:
         #     save_info = torch.load(wandb.restore(ckpt).name, map_location=self.device)
