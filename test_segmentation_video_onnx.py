@@ -355,7 +355,7 @@ def get_mp_mask(image,hands):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--pathname", type=str)
-    parser.add_argument("--path_out", type=str)
+    parser.add_argument("--path_out", type=str,default='test_video_out')
     parser.add_argument("--size_img", type=int,default=640)
     parser.add_argument("--start_frame", type=int,default=0)
     parser.add_argument("--nframes", type=int,default=300)
@@ -375,7 +375,7 @@ if __name__ == '__main__':
         shutil.rmtree(path_out)
     os.mkdir(path_out)
     size_img=args.size_img
-    L_refiner=200
+    
     nmax=args.nmax
     scale_out=args.scale_out
     start_frame=args.start_frame
@@ -408,10 +408,7 @@ if __name__ == '__main__':
       session_fp32 = onnxruntime.InferenceSession(onnx_path, providers=['CPUExecutionProvider'])
       
     
-    if torch.cuda.is_available():
-        refiner = refine.Refiner(device='cuda:0') 
-    else:
-        refiner = refine.Refiner(device='cpu')
+    
     
     for filename in files:
         
@@ -512,7 +509,7 @@ if __name__ == '__main__':
                                   XY_pinky=np.array(XY_pinky_full[ct_hand])
                                   XY_wrist=np.array(XY_wrist_full[ct_hand]).squeeze()
                                   try:
-                                    finger,palm=finger_segmentation(frame,index=XY_index,middle=XY_middle,pinky=XY_pinky,thumb=XY_thumb,ring=XY_ring,wrist=XY_wrist,refiner=refiner,L_refiner=L_refiner )
+                                    finger,palm=finger_segmentation(frame,frame_seg,index=XY_index,middle=XY_middle,pinky=XY_pinky,thumb=XY_thumb,ring=XY_ring,wrist=XY_wrist)
                                   except Exception as e :
                                     
                                     print('error finger_segmentation ',str(e),XY_index.shape)
