@@ -359,6 +359,7 @@ if __name__ == '__main__':
     parser.add_argument("--nmax", type=int,default=1000)
     parser.add_argument("--scale_out", type=float,default=1)
     parser.add_argument("--max_num_hands", type=int,default=1)
+    parser.add_argument("--model_path", type=str,default="mobilenet_seg.onnx")
     
     args = parser.parse_args()
     
@@ -387,7 +388,7 @@ if __name__ == '__main__':
     
     ### onnx
     
-    onnx_path="mobilenet_seg.onnx"
+    onnx_path=args.model_path
     
     if torch.cuda.is_available():
       session_fp32 = onnxruntime.InferenceSession(onnx_path, providers=['CUDAExecutionProvider'])
@@ -422,8 +423,10 @@ if __name__ == '__main__':
 
             shape_orig=img.shape
             start_time = timer()
+            
+            start_time_mp  = timer()
             mask_mp,results=get_mp_mask(frame,hands)  ### mediapipe su immagine a dimensione originale, posso anche fare opposto e scalare sopo results
-           
+            end_time_mp  = timer() 
            
             ### finger_palm segmetation
             landmarks_coord=get_landmarks_coord(frame,results)
@@ -436,13 +439,19 @@ if __name__ == '__main__':
             XY_pinky_full=landmarks_coord["XY_pinky_full"]
             XY_wrist_full=landmarks_coord["XY_wrist_full"]
             
+            
+            start_time_seg  = timer()
             ### onnx hand segmentation
             input_arr=preprocess_image(frame, 224,224, channels=3)
             outputs = session_fp32.run([], {'input':input_arr})[0]
             frame_seg = np.argmax(outputs.squeeze(), axis=0)*255
-            
-            
+            frame_seg=frame_seg.astype('uint8') 
+            frame_seg = cv2.resize(frame_seg,(frame.shape[1], frame.shape[0]))
+
+            #cv2.imwrite('DEBUG_frame_seg.jpg',frame_seg)
+            #cv2.imwrite('DEBUG_frame.jpg',frame)
             #########################
+            end_time_seg  = timer()
             
             for ct_hand in range(len(XY_index_full)):
                 
@@ -453,9 +462,9 @@ if __name__ == '__main__':
                     XY_pinky=np.array(XY_pinky_full[ct_hand])
                     XY_wrist=np.array(XY_wrist_full[ct_hand]).squeeze()
                     try:
-                      finger,palm=finger_segmentation(frame,frame_seg,index=XY_index,middle=XY_middle,pinky=XY_pinky,thumb=XY_thumb,ring=XY_ring,wrist=XY_wrist,refiner=refiner,L_refiner=L_refiner )
-                    except:
-                      print('error finger_segmentation ',XY_index.shape)
+                      finger,palm=finger_segmentation(frame,frame_seg,index=XY_index,middle=XY_middle,pinky=XY_pinky,thumb=XY_thumb,ring=XY_ring,wrist=XY_wrist)
+                    except Exception as e :
+                      print('error finger_segmentation ',XY_index.shape,str(e))
                       finger=np.zeros((frame.shape[0],frame.shape[1]),dtype='uint8')
                       palm=np.zeros((frame.shape[0],frame.shape[1]),dtype='uint8')
                    
@@ -468,7 +477,7 @@ if __name__ == '__main__':
 
             
             end_time  = timer()
-            print('processing time (sec)',end_time - start_time)
+            print('processing time (sec)',end_time - start_time, 'MP', end_time_mp - start_time_mp,'SEG', end_time_seg - start_time_seg )
 
             #######################
             #### draw image #######
