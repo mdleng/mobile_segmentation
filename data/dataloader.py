@@ -35,19 +35,19 @@ def transform(image, mask, image_size=224):
     # mask = TF.crop(mask, i, j, h, w)
     #
     # # Random horizontal flipping
-    # if random.random() > 0.5:
-    #     image = TF.hflip(image)
-    #     mask = TF.hflip(mask)
-    #
-    # degree = random.random() * 360
-    #
-    # image = TF.rotate(image, degree)
-    # mask = TF.rotate(mask, degree)
-    #
+    if random.random() > 0.5:
+         image = TF.hflip(image)
+         mask = TF.hflip(mask)
+    if random.random() > 0.5:
+      degree = random.random() * 360
+      image = TF.rotate(image, degree)
+      mask = TF.rotate(mask, degree)
+    
+    
     # # Random vertical flipping
-    # if random.random() > 0.5:
-    #     image = TF.vflip(image)
-    #     mask = TF.vflip(mask)
+    if random.random() > 0.5:
+         image = TF.vflip(image)
+         mask = TF.vflip(mask)
 
     resize = transforms.Resize(size=(image_size, image_size))
     image = resize(image)
