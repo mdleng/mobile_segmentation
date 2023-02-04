@@ -462,6 +462,7 @@ if __name__ == '__main__':
                
                 
                 if ret:
+                  try:
                     #frame_width_orig=frame.shape[1]
                     #frame_height_orig=frame.shape[0]
                     frame=cv2.resize(frame,(int(frame.shape[1]*scale_inp),int(frame.shape[0]*scale_inp)))
@@ -598,7 +599,11 @@ if __name__ == '__main__':
                           frame=cv2.resize( frame_view2, (int(frame_width_orig),int(frame_height_orig)))       
                           frame=cv2.resize( frame_view2, (frame_width_out,frame_height_out))
                     output_video.write(frame)
-                                      
+                  except Exception as e :
+                        frame=cv2.resize( frame, (frame_width_out,frame_height_out))
+                        output_video.write(frame)        
+                        print('error ',str(e))
+                                               
             cap.release()
             output_video.release()
     print('done')
