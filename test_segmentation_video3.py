@@ -466,14 +466,26 @@ if __name__ == '__main__':
             
             
             print(nframes)
+            padding=True
             for ct in range(nframes):
                 print(ct)
                 ret, frame = cap.read()
+                if padding == True:
+                
+                    pad=int(frame.shape[0]/10)
+                    shape_before_pad=frame.shape
+                    print('padding ',pad)
+
+                    frame_big=np.zeros((frame.shape[0]+2*pad,frame.shape[1]+2*pad,3),dtype='uint8')
+                    frame_big[pad:pad+frame.shape[0],pad:pad+frame.shape[1],:]=frame
+                    frame=frame_big
+                
+                
                 filename_image_out=os.path.join(path_out_images,basename+'_'+str(ct)+'.jpg')
                 filename_mask_out=os.path.join(path_out_masks,basename+'_'+str(ct)+'.jpg')
                 if ret:
-                    #frame_width_orig=frame.shape[1]
-                    #frame_height_orig=frame.shape[0]
+                    frame_width_orig=frame.shape[1]
+                    frame_height_orig=frame.shape[0]
                     frame=cv2.resize(frame,(int(frame.shape[1]*scale_inp),int(frame.shape[0]*scale_inp)))
                     img =frame.copy()
 
@@ -604,6 +616,20 @@ if __name__ == '__main__':
                           cv2.drawContours(frame_view2, contours_palm, -1, (255,255,255), contour_size)
                           frame=cv2.resize( frame_view2, (int(frame_width_orig),int(frame_height_orig)))       
                           frame=cv2.resize( frame_view2, (frame_width_out,frame_height_out))
+                          
+                          if padding == True:
+                              shape_frame_out=frame_view3.shape
+
+                              ## resize to original size
+                              frame_view3=cv2.resize( frame_view3, (int(frame_width_orig),int(frame_height_orig)))
+                              frame_mask=cv2.resize( frame_mask,(int(frame_width_orig),int(frame_height_orig)),interpolation=cv2.INTER_NEAREST)
+
+                              frame_view3=frame_view3[pad:pad+shape_before_pad[0],pad:pad+shape_before_pad[1],:]
+                              frame_mask=frame_mask[pad:pad+shape_before_pad[0],pad:pad+shape_before_pad[1]]
+
+                              frame_view3=cv2.resize( frame_view3, (shape_frame_out[1],shape_frame_out[0]))
+                              frame_mask=cv2.resize( frame_mask,(shape_frame_out[1],shape_frame_out[0]),interpolation=cv2.INTER_NEAREST)
+                
                           
                           cv2.imwrite(filename_image_out,frame_view3)
                           cv2.imwrite(filename_mask_out,frame_mask)
