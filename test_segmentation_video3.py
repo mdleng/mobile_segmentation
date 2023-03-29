@@ -631,8 +631,8 @@ if __name__ == '__main__':
                               frame_mask=cv2.resize( frame_mask,(shape_frame_out[1],shape_frame_out[0]),interpolation=cv2.INTER_NEAREST)
                 
                           
-                          cv2.imwrite(filename_image_out,frame_view3)
-                          cv2.imwrite(filename_mask_out,frame_mask)
+                          #cv2.imwrite(filename_image_out,frame_view3)
+                          #cv2.imwrite(filename_mask_out,frame_mask)
                     output_video.write(frame)
                                       
             cap.release()
