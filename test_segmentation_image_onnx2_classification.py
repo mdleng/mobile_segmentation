@@ -443,7 +443,7 @@ if __name__ == '__main__':
     files=files[0:min(nmax,len(files))]
     padding=True
     for filename in files:
-     try:
+       #try
             basename=os.path.basename(filename)
             filename_out=os.path.join(path_out,basename)
             print(filename,filename_out)
@@ -655,6 +655,6 @@ if __name__ == '__main__':
             pickle.dump(data_pkl, file_pkl)
             file_pkl.close()
 
-     except Exception as e :
-            print('error ',filename, str(e))
+    # except Exception as e :
+    #        print('error ',filename, str(e))
     print('done')
