@@ -363,7 +363,12 @@ if __name__ == '__main__':
 
     images=glob.glob(path_data+'/'+str(id)+"/*.JPG")
     images.extend(glob.glob(path_data+'/'+str(id)+"/*.jpg"))
-    print('images',len(images))
+    images.extend(glob.glob(path_data+'/'+str(id)+"/*.png"))
+    images.extend(glob.glob(path_data+'/'+str(id)+"/*.PNG"))
+    images.extend(glob.glob(path_data+'/'+str(id)+"/*.bmp"))
+    images.extend(glob.glob(path_data+'/'+str(id)+"/*.BMP"))
+    
+    print('n images',len(images))
 
     unlabel_paths=['fingersfront','palmfront','fingersback','palmback']
     for p in unlabel_paths:
