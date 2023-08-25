@@ -557,8 +557,25 @@ if __name__ == '__main__':
                         path_out_finger=os.path.join(path_data,'fingersback')
                     filename_finger_out=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.jpg')
                     filename_finger_out_shape=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.txt')  
-                    cv2.imwrite(filename_finger_out,final_roi)
-                    np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
+                    
+                    isgoodIndex=checkFinger(img,XY_index_full)
+                    isgoodMiddle=checkFinger(img,XY_middle_full)
+                    isgoodRing=checkFinger(img,XY_ring_full)
+                    isgoodPinky=checkFinger(img,XY_pinky_full)
+                    save_finger=False
+                    if finger_type=='index' and  isgoodIndex==True:
+                        save_finger=True
+                    if finger_type=='middle' and  isgoodMiddle==True:
+                        save_finger=True
+                    if finger_type=='ring' and  isgoodRing==True:
+                        save_finger=True
+                    if finger_type=='pinky' and  isgoodPinky==True:
+                        save_finger=True
+
+                    if save_finger:
+                        print('saving ', filename_finger_out)
+                        cv2.imwrite(filename_finger_out,final_roi)
+                        np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
                        
 
                     
