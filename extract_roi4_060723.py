@@ -464,7 +464,7 @@ if __name__ == '__main__':
             ### example INDEX , the other ar ethe same ###
 
 
-            isgood=checkFinger(img,XY_index_full)
+            isgood=True#checkFinger(img,XY_index_full) ## modifier 250823
             print('isgood',isgood)
             if isgood:
 
