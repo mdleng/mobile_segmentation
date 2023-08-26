@@ -361,7 +361,7 @@ if __name__ == '__main__':
     path_data=args.path_data
     id=args.id
 
-    images=glob.glob(path_data+'/'+str(id)+"/*.JPG")
+    images=sorted(glob.glob(path_data+'/'+str(id)+"/*.JPG"))
     images.extend(glob.glob(path_data+'/'+str(id)+"/*.jpg"))
     images.extend(glob.glob(path_data+'/'+str(id)+"/*.png"))
     images.extend(glob.glob(path_data+'/'+str(id)+"/*.PNG"))
@@ -386,11 +386,11 @@ if __name__ == '__main__':
       "pinky": 40,
       #"thumb":50
     }
-    
+    #print(images[13])
     
 
     for id_img in range(len(images)):
-    #id_img=3
+     #sid_img=13
      try:
         filename_img=images[id_img]
         print(filename_img)
@@ -465,7 +465,7 @@ if __name__ == '__main__':
 
 
             isgood=True#checkFinger(img,XY_index_full) ## modifier 250823
-            print('isgood',isgood)
+            #print('isgood',isgood)
             if isgood:
 
 
@@ -521,7 +521,7 @@ if __name__ == '__main__':
                 
                 #### fingers
                 
-                for finger_type in list(labels_fingers.keys()):
+                for finger_type in sorted(list(labels_fingers.keys())):
                 
                 
                     label_finger=mask[int(XY_index_full[1,1]),int(XY_index_full[1,0])]
@@ -530,14 +530,17 @@ if __name__ == '__main__':
                     if finger_type=='index':
                         pBottom=XY_index_full[0,:]
                         pTop=XY_index_full[-1,:]
+                        isgoodIndex=checkFinger(img,XY_index_full)
                         
                     if finger_type=='middle':
                         pBottom=XY_middle_full[0,:]
                         pTop=XY_middle_full[-1,:]
+                        isgoodMiddle=checkFinger(img,XY_middle_full)
                         
                     if finger_type=='ring':
                         pBottom=XY_ring_full[0,:]
                         pTop=XY_ring_full[-1,:]
+                        isgoodRing=checkFinger(img,XY_ring_full)
                     
                     if finger_type=='thumb':
                         pBottom=XY_thumb_full[0,:]
@@ -546,22 +549,8 @@ if __name__ == '__main__':
                     if finger_type=='pinky':
                         pBottom=XY_pinky_full[0,:]
                         pTop=XY_pinky_full[-1,:]
+                        isgoodPinky=checkFinger(img,XY_pinky_full)
                     
-                    final_roi=get_rotated_roi(img,mask,label_finger,pBottom,pTop,w=100)
-                    features_shape_finger=get_shape_features(final_roi,dist_ref)
-                    
-                     ### write finger roi e features 
-                    if hand_type[1]=='Palm':
-                        path_out_finger=os.path.join(path_data,'fingersfront')
-                    else:
-                        path_out_finger=os.path.join(path_data,'fingersback')
-                    filename_finger_out=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.jpg')
-                    filename_finger_out_shape=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.txt')  
-                    
-                    isgoodIndex=checkFinger(img,XY_index_full)
-                    isgoodMiddle=checkFinger(img,XY_middle_full)
-                    isgoodRing=checkFinger(img,XY_ring_full)
-                    isgoodPinky=checkFinger(img,XY_pinky_full)
                     save_finger=False
                     if finger_type=='index' and  isgoodIndex==True:
                         save_finger=True
@@ -573,9 +562,27 @@ if __name__ == '__main__':
                         save_finger=True
 
                     if save_finger:
+                        final_roi=get_rotated_roi(img,mask,label_finger,pBottom,pTop,w=100)
+                        features_shape_finger=get_shape_features(final_roi,dist_ref)
+                        
+                        ### write finger roi e features 
+                        if hand_type[1]=='Palm':
+                            path_out_finger=os.path.join(path_data,'fingersfront')
+                        else:
+                            path_out_finger=os.path.join(path_data,'fingersback')
+                        filename_finger_out=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.jpg')
+                        filename_finger_out_shape=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.txt')  
+                
                         print('saving ', filename_finger_out)
                         cv2.imwrite(filename_finger_out,final_roi)
                         np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
+                    
+                         
+                   # isgoodIndex=checkFinger(img,XY_index_full)
+                   # isgoodMiddle=checkFinger(img,XY_middle_full)
+                   # isgoodRing=checkFinger(img,XY_ring_full)
+                   # isgoodPinky=checkFinger(img,XY_pinky_full)
+                    
                        
 
                     
@@ -583,4 +590,4 @@ if __name__ == '__main__':
      except Exception as e:
           print(e)
                 
-
+        
