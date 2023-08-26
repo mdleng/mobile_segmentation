@@ -390,7 +390,7 @@ if __name__ == '__main__':
     
 
     for id_img in range(len(images)):
-     #sid_img=13
+     #id_img=28
      try:
         filename_img=images[id_img]
         print(filename_img)
@@ -401,7 +401,7 @@ if __name__ == '__main__':
         filename_mask=path_data+'/'+str(id)+"/masks/"+basename.lower()
         filename_mask=filename_mask.replace('jpg','png')
         filename_pkl=filename_mask.replace('png','pkl')
-        
+        print( filename_img_pad,os.path.exists(filename_img_pad))
         
         if os.path.exists(filename_img_pad):
         
@@ -465,7 +465,7 @@ if __name__ == '__main__':
 
 
             isgood=True#checkFinger(img,XY_index_full) ## modifier 250823
-            #print('isgood',isgood)
+            print('isgood',isgood)
             if isgood:
 
 
@@ -531,6 +531,7 @@ if __name__ == '__main__':
                         pBottom=XY_index_full[0,:]
                         pTop=XY_index_full[-1,:]
                         isgoodIndex=checkFinger(img,XY_index_full)
+                        print(isgoodIndex)
                         
                     if finger_type=='middle':
                         pBottom=XY_middle_full[0,:]

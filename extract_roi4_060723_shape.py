@@ -440,7 +440,7 @@ def get_shape_features(roi,dist_ref):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--path_data", type=str,default='H:\elance\hand\classificazione\hand_recognition_dataset2_masks_010623\hand_recognition_dataset2')
-    parser.add_argument("--id", type=str,default='0')
+    parser.add_argument("--id", type=str,default='41')
     parser.add_argument("--clear", type=str,default='False')
     
     args = parser.parse_args()
@@ -483,7 +483,7 @@ if __name__ == '__main__':
     
 
     for id_img in range(len(images)):
-     #id_img=13
+     #id_img=28
      try:
         filename_img=images[id_img]
         print(filename_img)
@@ -505,6 +505,7 @@ if __name__ == '__main__':
             ### posso normalizzare immagine a dimensione standard
             ### 3100 x 3916 un pò gra,nde posso fare un resize ma faccio dopo per ottimizzazione
             img=cv2.resize(img, (3100 , 3916) )
+            img_orig=img.copy()
             mask=cv2.resize(mask, (3100 , 3916),interpolation = cv2.INTER_NEAREST )
             
             mask_bin=np.zeros_like(mask)
@@ -640,17 +641,18 @@ if __name__ == '__main__':
                     if finger_type=='index':
                         pBottom=XY_index_full[0,:]
                         pTop=XY_index_full[-1,:]
-                        isgoodIndex=checkFinger(img,XY_index_full)
+                        isgoodIndex=checkFinger(img_orig,XY_index_full)
+                        print(isgoodIndex)
                         
                     if finger_type=='middle':
                         pBottom=XY_middle_full[0,:]
                         pTop=XY_middle_full[-1,:]
-                        isgoodMiddle=checkFinger(img,XY_middle_full)
+                        isgoodMiddle=checkFinger(img_orig,XY_middle_full)
                         
                     if finger_type=='ring':
                         pBottom=XY_ring_full[0,:]
                         pTop=XY_ring_full[-1,:]
-                        isgoodRing=checkFinger(img,XY_ring_full)
+                        isgoodRing=checkFinger(img_orig,XY_ring_full)
                     
                     if finger_type=='thumb':
                         pBottom=XY_thumb_full[0,:]
@@ -659,7 +661,7 @@ if __name__ == '__main__':
                     if finger_type=='pinky':
                         pBottom=XY_pinky_full[0,:]
                         pTop=XY_pinky_full[-1,:]
-                        isgoodPinky=checkFinger(img,XY_pinky_full)
+                        isgoodPinky=checkFinger(img_orig,XY_pinky_full)
 
                     save_finger=False
                     if finger_type=='index' and  isgoodIndex==True:
