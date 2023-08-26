@@ -551,6 +551,7 @@ if __name__ == '__main__':
                         pBottom=XY_pinky_full[0,:]
                         pTop=XY_pinky_full[-1,:]
                         isgoodPinky=checkFinger(img,XY_pinky_full)
+                        print(isgoodPinky)
                     
                     save_finger=False
                     if finger_type=='index' and  isgoodIndex==True:
