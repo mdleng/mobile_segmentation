@@ -483,7 +483,7 @@ if __name__ == '__main__':
     
 
     for id_img in range(len(images)):
-     id_img=12
+     #id_img=12
      try:
         filename_img=images[id_img]
         print(filename_img)
