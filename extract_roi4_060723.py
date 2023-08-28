@@ -579,11 +579,12 @@ if __name__ == '__main__':
                             path_out_finger=os.path.join(path_data,'fingersback')
                         filename_finger_out=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.jpg')
                         filename_finger_out_shape=os.path.join(path_out_finger,str(id)+'_'+str(id_img)+'_'+hand_type[0]+'_'+finger_type+'.txt')  
-                
-                        print('saving ', filename_finger_out)
-                        cv2.imwrite(filename_finger_out,final_roi)
-                        np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
-                    
+
+                        if final_roi.shape[0]/final_roi.shape[1]> 1.5:
+                            print('saving ', filename_finger_out)
+                            cv2.imwrite(filename_finger_out,final_roi)
+                            np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
+                        
                          
                    # isgoodIndex=checkFinger(img,XY_index_full)
                    # isgoodMiddle=checkFinger(img,XY_middle_full)

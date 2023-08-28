@@ -443,7 +443,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--path_data", type=str,default='H:\elance\hand\classificazione\hand_recognition_dataset2_masks_010623\hand_recognition_dataset2')
     parser.add_argument("--id", type=str,default='125')
-    parser.add_argument("--clear", type=str,default='False')
+    parser.add_argument("--clear", type=str,default='True')
     
     args = parser.parse_args()
     path_data=args.path_data
@@ -694,12 +694,15 @@ if __name__ == '__main__':
 
                         
                         
-
-                       
-                        print(' save finger ', filename_finger_out)
-                        cv2.imwrite(filename_finger_out,final_roi)
-                        np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
-                    
+                        #nzero=np.where()
+                       # nzero=len(np.where(final_roi==0)[0])
+                       # ntot=final_roi.shape[0]*final_roi.shape[1]
+                        
+                        if final_roi.shape[0]/final_roi.shape[1]> 1.5:
+                            print(' save finger ', filename_finger_out,final_roi.shape[0]/final_roi.shape[1]  )
+                            cv2.imwrite(filename_finger_out,final_roi)
+                            np.savetxt(filename_finger_out_shape,features_shape_finger,fmt='%1.3f')
+                        
 
                     
                 ###################################################################
