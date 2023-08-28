@@ -85,9 +85,11 @@ def checkFinger(image,XY):
         y=int(XY[ct,1])
         if x<0 or x>image.shape[1] or y<0 or y>image.shape[0]:
             isgood=False
+            print('false cond 1', x<0 , x>image.shape[1] , y<0 , y>image.shape[0])
         else:
             if image[y,x,0]==0:
                 isgood=False
+                print('false cond 2')
     return isgood
                 
             
@@ -354,7 +356,7 @@ def get_shape_features(roi,dist_ref):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--path_data", type=str,default='H:\elance\hand\classificazione\hand_recognition_dataset2_masks_010623\hand_recognition_dataset2')
-    parser.add_argument("--id", type=str,default='0')
+    parser.add_argument("--id", type=str,default='125')
     parser.add_argument("--clear", type=str,default='False')
     
     args = parser.parse_args()
@@ -390,7 +392,7 @@ if __name__ == '__main__':
     
 
     for id_img in range(len(images)):
-     #id_img=12
+    # id_img=24
      try:
         filename_img=images[id_img]
         print(filename_img)
@@ -465,7 +467,7 @@ if __name__ == '__main__':
 
 
             isgood=True#checkFinger(img,XY_index_full) ## modifier 250823
-            print('isgood',isgood)
+            #print('isgood',isgood)
             if isgood:
 
 
@@ -531,17 +533,19 @@ if __name__ == '__main__':
                         pBottom=XY_index_full[0,:]
                         pTop=XY_index_full[-1,:]
                         isgoodIndex=checkFinger(img,XY_index_full)
-                        print(isgoodIndex)
+                        print('index',isgoodIndex)
                         
                     if finger_type=='middle':
                         pBottom=XY_middle_full[0,:]
                         pTop=XY_middle_full[-1,:]
                         isgoodMiddle=checkFinger(img,XY_middle_full)
+                        print('middle',isgoodMiddle)
                         
                     if finger_type=='ring':
                         pBottom=XY_ring_full[0,:]
                         pTop=XY_ring_full[-1,:]
                         isgoodRing=checkFinger(img,XY_ring_full)
+                        print('ring',isgoodRing)
                     
                     if finger_type=='thumb':
                         pBottom=XY_thumb_full[0,:]
@@ -551,7 +555,8 @@ if __name__ == '__main__':
                         pBottom=XY_pinky_full[0,:]
                         pTop=XY_pinky_full[-1,:]
                         isgoodPinky=checkFinger(img,XY_pinky_full)
-                        print(isgoodPinky)
+                        print('pinky',isgoodPinky,XY_pinky_full.shape )
+                       # cv2.imwrite('DEBUGpinky.jpg',img)
                     
                     save_finger=False
                     if finger_type=='index' and  isgoodIndex==True:
